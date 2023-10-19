@@ -15,36 +15,38 @@ func main() {
 	partTime.NationalCode = 5587496541
 	partTime.PartTimeHour = 120
 
-	var employee EmployeeInterface = partTime
-	salary, name := employee.SalaryCalculator(partTime.PartTimeHour)
+	var employee EmployeeSalaryCalculator = fullTime
+	salary, name := employee.SalaryCalculate(fullTime.ExtraHour)
 	fmt.Printf("salary is: %3f \n name is: %s \n", salary, name)
 }
 
-type EmployeeInterface interface {
-	SalaryCalculator(hour float64) (salary float64, name string)
+type EmployeeSalaryCalculator interface {
+	SalaryCalculate(hour float64) (salary float64, name string)
+}
+
+type BaseEmployee struct {
+	ID           string
+	FullName     string
+	NationalCode int
 }
 
 type FullTimeEmployee struct {
-	ID           string
-	FullName     string
-	NationalCode int
-	ExtraHour    float64
+	BaseEmployee
+	ExtraHour float64
 }
 
 type PartTimeEmployee struct {
-	ID           string
-	FullName     string
-	NationalCode int
+	BaseEmployee
 	PartTimeHour float64
 }
 
-func (fullEmployee FullTimeEmployee) SalaryCalculator(hour float64) (salary float64, name string) {
+func (fullEmployee FullTimeEmployee) SalaryCalculate(hour float64) (salary float64, name string) {
 	salary = 8000000 + (fullEmployee.ExtraHour)*1.4
 	name = fullEmployee.FullName
 	return
 }
 
-func (partEmployee PartTimeEmployee) SalaryCalculator(hour float64) (salary float64, name string) {
+func (partEmployee PartTimeEmployee) SalaryCalculate(hour float64) (salary float64, name string) {
 	salary = partEmployee.PartTimeHour * 320000
 	name = partEmployee.FullName
 	return
